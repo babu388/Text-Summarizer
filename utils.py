@@ -2,7 +2,7 @@ import re
 import requests
 import docx2txt
 from io import StringIO
-from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfReader
 
 from bs4 import BeautifulSoup
 from nltk.tokenize import sent_tokenize
@@ -103,14 +103,18 @@ def preprocess_text_for_abstractive_summarization(tokenizer, text):
 
 
 def read_pdf(file):
-    pdfReader = PdfFileReader(file)
-    count = pdfReader.numPages
-    all_page_text = ""
-    for i in range(count):
-        page = pdfReader.getPage(i)
-        all_page_text += page.extractText()
-
-    return all_page_text
+    # pdfReader = PdfReader(file)
+    # count = pdfReader.numPages
+    # all_page_text = ""
+    # for i in range(count):
+    #     page = pdfReader.getPage(i)
+    #     all_page_text += page.extractText()
+    pdfreader = PdfReader(file)
+    text = ""
+    for i in range(len(pdfreader.pages)):
+        page = pdfreader.pages[i]
+        text += page.extract_text() + "\n"
+    return text
 
 
 def read_text_from_file(file):
